@@ -117,14 +117,16 @@ module.exports = (env) ->
           token: match
           nextInput: input.substring(match.length)
           actionHandler: new PushoverActionHandler(
-            @framework, titleTokens, messageTokens, priority, sound, device, retry, expire, callbackurl
+            @framework, titleTokens, messageTokens, 
+            priority, sound, device, retry, expire, callbackurl
           )
         }
             
 
   class PushoverActionHandler extends env.actions.ActionHandler 
 
-    constructor: (@framework, @titleTokens, @messageTokens, @priority, @sound, @device, @retry, @expire, @callbackurl) ->
+    constructor: (@framework, @titleTokens, @messageTokens, 
+      @priority, @sound, @device, @retry, @expire, @callbackurl) ->
 
     executeAction: (simulate, context) ->
       Promise.all( [
@@ -139,21 +141,21 @@ module.exports = (env) ->
           if @priority is "2"
             env.logger.debug "pushover debug: priority=2"
             msg = {
-                message: message
-                title: title
-                sound: @sound
-                priority: @priority
-                retry: @retry
-                expire: @expire
-                callbackurl: @callbackurl
+              message: message
+              title: title
+              sound: @sound
+              priority: @priority
+              retry: @retry
+              expire: @expire
+              callbackurl: @callbackurl
             }
           else
             env.logger.debug "pushover debug: priority=xxx"
             msg = {
-                message: message
-                title: title
-                sound: @sound
-                priority: @priority
+              message: message
+              title: title
+              sound: @sound
+              priority: @priority
             }
             
 

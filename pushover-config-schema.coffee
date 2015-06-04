@@ -42,15 +42,18 @@ module.exports = {
       type: "string"
       default: ""
     retry: #might be overwritten by predicate
-      description:"""Only applicable when priority = 2. Sets how often the user is notified (in seconds)"""
+      description:
+        """Only applicable when priority = 2. Sets how often the user is notified (in seconds)"""
       type: "integer"
       default: 600
     expire: #might be overwritten by predicate
-      description:"""Only applicable when priority = 2. Sets how long the user is notified (in seconds)"""
+      description:
+        """Only applicable when priority = 2. Sets how long the user is notified (in seconds)"""
       type: "integer"
       default: 3600
     callbackurl: #might be overwritten by predicate
-      description:"""Only applicable when priority = 2. URL is called when user acknowledges the notification"""
+      description:
+        "Only applicable when priority = 2. URL is called when user acknowledges the notification"
       type: "string"
       default: ""
 }
