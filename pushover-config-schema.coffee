@@ -9,6 +9,7 @@ module.exports = {
       required: yes
     token:
       description:"Pushover token"
+      type: "string"
       default: ""
       required: yes
     title: #might be overwritten by predicate
@@ -21,6 +22,7 @@ module.exports = {
       default: ""
     url: #might be overwritten by predicate, not implemented yet
       description:"URL which to send with the notification"
+      type: "string"
       format: "url"
       default: "https://github.com/thexperiments/pimatic-pushover"
     urlTitle: #might be overwritten by predicate, not implemented yet
