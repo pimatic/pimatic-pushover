@@ -2,10 +2,12 @@
   "name": "pimatic-pushover",
   "description": "Plugin to send Pushover notifications in pimatic",
   "author": "Lukas Reinhart <reinhart.lukas@gmail.com>",
+  "license": "GPL-2.0",
   "main": "pushover",
   "files": [
     "pushover.coffee",
     "README.md",
+    "LICENSE",
     "pushover-config-schema.coffee"
   ],
   "version": "0.8.5",
@@ -16,10 +18,10 @@
   },
   "configSchema": "pushover-config-schema.coffee",
   "dependencies": {
-    "pushover-notifications": "0.2.1"
+    "pushover-notifications": "0.2.2"
   },
   "peerDependencies": {
-    "pimatic": "0.8.*"
+    "pimatic": ">=0.8.0 <1.0.0"
   },
   "engines": {
     "node": ">0.8.x",
