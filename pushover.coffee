@@ -5,7 +5,7 @@
 # ##The plugin code
 
 # Your plugin must export a single function, that takes one argument and returns a instance of
-# your plugin class. The parameter is an envirement object containing all pimatic related functions
+# your plugin class. The parameter is an environment object containing all pimatic related functions
 # and classes. See the [startup.coffee](http://sweetpi.de/pimatic/docs/startup.html) for details.
 module.exports = (env) ->
 
