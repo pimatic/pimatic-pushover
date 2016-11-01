@@ -91,10 +91,10 @@ module.exports = (env) ->
       next = m.match(' priority:').matchNumber(setPriority)
       if next.hadMatch() then m = next
 
-      next = m.match(' device:').matchString(setDevice)
+      next = m.match(' device:').matchStringWithVars(setDevice)
       if next.hadMatch() then m = next
       
-      next = m.match(' sound:').matchString(setSound)
+      next = m.match(' sound:').matchStringWithVars(setSound)
       if next.hadMatch() then m = next
       
       next = m.match(' retry:').matchNumber(setRetry)
@@ -103,7 +103,7 @@ module.exports = (env) ->
       next = m.match(' expire:').matchNumber(setExpire)
       if next.hadMatch() then m = next
       
-      next = m.match(' callbackurl:').matchString(setCallbackurl)
+      next = m.match(' callbackurl:').matchStringWithVars(setCallbackurl)
       if next.hadMatch() then m = next
 
       if m.hadMatch()
