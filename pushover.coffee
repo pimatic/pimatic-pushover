@@ -64,6 +64,7 @@ module.exports = (env) ->
       messageTokens = strToTokens defaultMessage
       priority = defaultPriority
       sound = defaultSound
+      url = undefined
       device = defaultDevice
       retry = defaultRetry
       expire = defaultExpire
@@ -74,6 +75,7 @@ module.exports = (env) ->
       setPriority = (m, p) => priority = p
       setDevice = (m, d) => device = d
       setSound = (m, d) => sound = d
+      setUrl = (m, d) => url = d
       setRetry = (m, d) => retry = d
       setExpire = (m, d) => expire = d
       setCallbackurl = (m, d) => callbackurl = d
@@ -93,10 +95,13 @@ module.exports = (env) ->
 
       next = m.match(' device:').matchStringWithVars(setDevice)
       if next.hadMatch() then m = next
-      
+
       next = m.match(' sound:').matchStringWithVars(setSound)
       if next.hadMatch() then m = next
-      
+
+      next = m.match(' url:').matchStringWithVars(setUrl)
+      if next.hadMatch() then m = next
+
       next = m.match(' retry:').matchNumber(setRetry)
       if next.hadMatch() then m = next
       
@@ -117,14 +122,14 @@ module.exports = (env) ->
           token: match
           nextInput: input.substring(match.length)
           actionHandler: new PushoverActionHandler(
-            @framework, titleTokens, messageTokens, priority, sound, device, retry, expire, callbackurl
+            @framework, titleTokens, messageTokens, priority, sound, url, device, retry, expire, callbackurl
           )
         }
             
 
   class PushoverActionHandler extends env.actions.ActionHandler 
 
-    constructor: (@framework, @titleTokens, @messageTokens, @priority, @sound, @device, @retry, @expire, @callbackurl) ->
+    constructor: (@framework, @titleTokens, @messageTokens, @priority, @sound, @url, @device, @retry, @expire, @callbackurl) ->
 
     executeAction: (simulate, context) ->
       Promise.all( [
@@ -142,6 +147,7 @@ module.exports = (env) ->
                 message: message
                 title: title
                 sound: @sound
+                url: @url
                 priority: @priority
                 retry: @retry
                 expire: @expire
@@ -153,6 +159,7 @@ module.exports = (env) ->
                 message: message
                 title: title
                 sound: @sound
+                url: @url
                 priority: @priority
             }
             

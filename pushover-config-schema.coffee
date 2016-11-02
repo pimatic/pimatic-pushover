@@ -39,6 +39,10 @@ module.exports = {
       description: "Sound for the notification, see https://pushover.net/api#sounds"
       type: "string"
       default: "pushover"
+    url: #might be overwritten by predicate
+      description: "Supplementary URL to show with your message, see https://pushover.net/api#urls"
+      type: "string"
+      required: false
     device: #might be overwritten by predicate
       description: "device to send the notification to"
       type: "string"
