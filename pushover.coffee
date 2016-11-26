@@ -65,7 +65,7 @@ module.exports = (env) ->
       priority = defaultPriority
       sound = defaultSound
       url = undefined
-      device = defaultDevice
+      deviceTokens = strToTokens defaultDevice
       retry = defaultRetry
       expire = defaultExpire
       callbackurl = defaultCallbackurl
@@ -73,7 +73,7 @@ module.exports = (env) ->
       setTitle = (m, tokens) => titleTokens = tokens
       setMessage = (m, tokens) => messageTokens = tokens
       setPriority = (m, p) => priority = p
-      setDevice = (m, d) => device = d
+      setDevice = (m, tokens) => deviceTokens = tokens
       setSound = (m, d) => sound = d
       setUrl = (m, d) => url = d
       setRetry = (m, d) => retry = d
@@ -122,20 +122,21 @@ module.exports = (env) ->
           token: match
           nextInput: input.substring(match.length)
           actionHandler: new PushoverActionHandler(
-            @framework, titleTokens, messageTokens, priority, sound, url, device, retry, expire, callbackurl
+            @framework, titleTokens, messageTokens, priority, sound, url, deviceTokens, retry, expire, callbackurl
           )
         }
             
 
-  class PushoverActionHandler extends env.actions.ActionHandler 
+  class PushoverActionHandler extends env.actions.ActionHandler
 
-    constructor: (@framework, @titleTokens, @messageTokens, @priority, @sound, @url, @device, @retry, @expire, @callbackurl) ->
+    constructor: (@framework, @titleTokens, @messageTokens, @priority, @sound, @url, @deviceTokens, @retry, @expire, @callbackurl) ->
 
     executeAction: (simulate, context) ->
       Promise.all( [
         @framework.variableManager.evaluateStringExpression(@titleTokens)
         @framework.variableManager.evaluateStringExpression(@messageTokens)
-      ]).then( ([title, message]) =>
+        @framework.variableManager.evaluateStringExpression(@deviceTokens)
+      ]).then( ([title, message, device]) =>
         if simulate
           # just return a promise fulfilled with a description about what we would do.
           return __("would push message \"%s\" with title \"%s\"", message, title)
@@ -146,6 +147,7 @@ module.exports = (env) ->
             msg = {
                 message: message
                 title: title
+                device: device
                 sound: @sound
                 url: @url
                 priority: @priority
@@ -158,16 +160,14 @@ module.exports = (env) ->
             msg = {
                 message: message
                 title: title
+                device: device
                 sound: @sound
                 url: @url
                 priority: @priority
             }
-            
 
-          msg.device = @device if @device? and @device.length > 0
-
-          return pushoverService.sendAsync(msg).then( => 
-            __("pushover message sent successfully") 
+          return pushoverService.sendAsync(msg).then( =>
+            __("pushover message sent successfully")
           )
       )
 
