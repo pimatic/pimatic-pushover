@@ -127,7 +127,7 @@ module.exports = (env) ->
         }
             
 
-  class PushoverActionHandler extends env.actions.ActionHandler
+  class PushoverActionHandler extends env.actions.ActionHandler 
 
     constructor: (@framework, @titleTokens, @messageTokens, @priority, @sound, @url, @deviceTokens, @retry, @expire, @callbackurl) ->
 
@@ -166,8 +166,8 @@ module.exports = (env) ->
                 priority: @priority
             }
 
-          return pushoverService.sendAsync(msg).then( =>
-            __("pushover message sent successfully")
+          return pushoverService.sendAsync(msg).then( => 
+            __("pushover message sent successfully") 
           )
       )
 
