@@ -63,22 +63,22 @@ module.exports = (env) ->
       titleTokens = strToTokens defaultTitle
       messageTokens = strToTokens defaultMessage
       priority = defaultPriority
-      sound = defaultSound
-      url = undefined
+      soundTokens = strToTokens defaultSound
+      urlTokens = undefined
       deviceTokens = strToTokens defaultDevice
       retry = defaultRetry
       expire = defaultExpire
-      callbackurl = defaultCallbackurl
+      callbackurlTokens = strToTokens defaultCallbackurl
 
       setTitle = (m, tokens) => titleTokens = tokens
       setMessage = (m, tokens) => messageTokens = tokens
       setPriority = (m, p) => priority = p
       setDevice = (m, tokens) => deviceTokens = tokens
-      setSound = (m, d) => sound = d
-      setUrl = (m, d) => url = d
+      setSound = (m, tokens) => soundTokens = tokens
+      setUrl = (m, tokens) => urlTokens = tokens
       setRetry = (m, d) => retry = d
       setExpire = (m, d) => expire = d
-      setCallbackurl = (m, d) => callbackurl = d
+      setCallbackurl = (m, tokens) => callbackurlTokens = tokens
 
       m = M(input, context)
         .match('send ', optional: yes)
@@ -122,38 +122,40 @@ module.exports = (env) ->
           token: match
           nextInput: input.substring(match.length)
           actionHandler: new PushoverActionHandler(
-            @framework, titleTokens, messageTokens, priority, sound, url, deviceTokens, retry, expire, callbackurl
+            @framework, titleTokens, messageTokens, priority, soundTokens, urlTokens, deviceTokens, retry, expire, callbackurlTokens
           )
         }
             
 
   class PushoverActionHandler extends env.actions.ActionHandler 
 
-    constructor: (@framework, @titleTokens, @messageTokens, @priority, @sound, @url, @deviceTokens, @retry, @expire, @callbackurl) ->
+    constructor: (@framework, @titleTokens, @messageTokens, @priority, @soundTokens, @urlTokens, @deviceTokens, @retry, @expire, @callbackurlTokens) ->
 
     executeAction: (simulate, context) ->
       Promise.all( [
         @framework.variableManager.evaluateStringExpression(@titleTokens)
         @framework.variableManager.evaluateStringExpression(@messageTokens)
+        @framework.variableManager.evaluateStringExpression(@soundTokens)
+        if @urlTokens? then @framework.variableManager.evaluateStringExpression(@urlTokens) else Promise.resolve
         @framework.variableManager.evaluateStringExpression(@deviceTokens)
-      ]).then( ([title, message, device]) =>
+        @framework.variableManager.evaluateStringExpression(@callbackurlTokens)
+      ]).then( ([title, message, sound, url, device, callbackurl]) =>
         if simulate
           # just return a promise fulfilled with a description about what we would do.
           return __("would push message \"%s\" with title \"%s\"", message, title)
         else
-          
           if @priority is "2"
             env.logger.debug "pushover debug: priority=2"
             msg = {
                 message: message
                 title: title
                 device: device
-                sound: @sound
-                url: @url
+                sound: sound
+                url: url
                 priority: @priority
                 retry: @retry
                 expire: @expire
-                callbackurl: @callbackurl
+                callbackurl: callbackurl
             }
           else
             env.logger.debug "pushover debug: priority=xxx"
@@ -161,8 +163,8 @@ module.exports = (env) ->
                 message: message
                 title: title
                 device: device
-                sound: @sound
-                url: @url
+                sound: sound
+                url: url
                 priority: @priority
             }
 
