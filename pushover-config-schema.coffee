@@ -12,6 +12,11 @@ module.exports = {
       type: "string"
       default: ""
       required: yes
+    html:
+      description: "Interpret HTML message tags supported as of v2.3 device clients"
+      type: "boolean"
+      default: true
+      required: false
     title: #might be overwritten by predicate
       description: "Title for the notification"
       type: "string"

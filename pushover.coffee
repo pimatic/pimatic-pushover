@@ -56,7 +56,8 @@ module.exports = (env) ->
       defaultRetry = @config.retry
       defaultExpire = @config.expire
       defaultCallbackurl = @config.callbackurl
-      
+      defaultHtml = if @config.html then 1 else 0
+
       # Helper to convert 'some text' to [ '"some text"' ]
       strToTokens = (str) => ["\"#{str}\""]
 
@@ -69,6 +70,7 @@ module.exports = (env) ->
       retry = defaultRetry
       expire = defaultExpire
       callbackurlTokens = strToTokens defaultCallbackurl
+      html = defaultHtml
 
       setTitle = (m, tokens) => titleTokens = tokens
       setMessage = (m, tokens) => messageTokens = tokens
@@ -79,6 +81,7 @@ module.exports = (env) ->
       setRetry = (m, d) => retry = d
       setExpire = (m, d) => expire = d
       setCallbackurl = (m, tokens) => callbackurlTokens = tokens
+      setHtml = (m, d) => html = d
 
       m = M(input, context)
         .match('send ', optional: yes)
@@ -111,6 +114,9 @@ module.exports = (env) ->
       next = m.match(' callbackurl:').matchStringWithVars(setCallbackurl)
       if next.hadMatch() then m = next
 
+      next = m.match(' html:').matchNumber(setHtml)
+      if next.hadMatch() then m = next
+
       if m.hadMatch()
         match = m.getFullMatch()
 
@@ -122,14 +128,14 @@ module.exports = (env) ->
           token: match
           nextInput: input.substring(match.length)
           actionHandler: new PushoverActionHandler(
-            @framework, titleTokens, messageTokens, priority, soundTokens, urlTokens, deviceTokens, retry, expire, callbackurlTokens
+            @framework, titleTokens, messageTokens, priority, soundTokens, urlTokens, deviceTokens, retry, expire, callbackurlTokens, html
           )
         }
             
 
   class PushoverActionHandler extends env.actions.ActionHandler 
 
-    constructor: (@framework, @titleTokens, @messageTokens, @priority, @soundTokens, @urlTokens, @deviceTokens, @retry, @expire, @callbackurlTokens) ->
+    constructor: (@framework, @titleTokens, @messageTokens, @priority, @soundTokens, @urlTokens, @deviceTokens, @retry, @expire, @callbackurlTokens, @html) ->
 
     executeAction: (simulate, context) ->
       Promise.all( [
@@ -156,6 +162,7 @@ module.exports = (env) ->
                 retry: @retry
                 expire: @expire
                 callbackurl: callbackurl
+                html: @html
             }
           else
             env.logger.debug "pushover debug: priority=xxx"
@@ -166,6 +173,7 @@ module.exports = (env) ->
                 sound: sound
                 url: url
                 priority: @priority
+                html: @html
             }
 
           return pushoverService.sendAsync(msg).then( => 
