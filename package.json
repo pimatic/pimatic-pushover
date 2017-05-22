@@ -2,6 +2,30 @@
   "name": "pimatic-pushover",
   "description": "Plugin to send Pushover notifications in pimatic",
   "author": "Lukas Reinhart <reinhart.lukas@gmail.com>",
+  "maintainers": [
+    {
+      "name": "mwittig",
+      "url": "https://github.com/mwittig"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "philipkocanda",
+      "url": "https://github.com/philipkocanda"
+    },
+    {
+      "name": "Xento",
+      "url": "https://github.com/Xento"
+    },
+    {
+      "name": "sweetpi",
+      "url": "https://github.com/sweetpi"
+    },
+    {
+      "name": "mwittig",
+      "url": "https://github.com/mwittig"
+    }
+  ],
   "license": "GPL-2.0",
   "main": "pushover",
   "files": [
@@ -18,7 +42,7 @@
   },
   "configSchema": "pushover-config-schema.coffee",
   "dependencies": {
-    "pushover-notifications": "0.2.3"
+    "pushover-notifications": "0.2.4"
   },
   "peerDependencies": {
     "pimatic": ">=0.8.0 <1.0.0"
